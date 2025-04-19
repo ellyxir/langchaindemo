@@ -3,13 +3,16 @@ defmodule Langchaindemo do
   alias LangChain.ChatModels.ChatOpenAI
   alias LangChain.Message
 
+  def model(), do: Application.fetch_env!(:langchain, :model)
+  def endpoint(), do: Application.fetch_env!(:langchain, :endpoint)
+
   def doit do
     {:ok, updated_chain} =
       %{
         llm:
           ChatOpenAI.new!(%{
-            endpoint: "https://openrouter.ai/api/v1/chat/completions",
-            model: "meta-llama/llama-4-scout:free"
+            endpoint: endpoint(),
+            model: model()
           })
       }
       |> LLMChain.new!()
