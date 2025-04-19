@@ -23,7 +23,8 @@ defmodule Langchaindemo.MixProject do
   defp deps do
     [
       {:langchain, "~> 0.3.0"},
-      {:kino, "~> 0.12.0"}
+      {:kino, "~> 0.12.0"},
+      {:nostrum, "~> 0.10"}
     ]
   end
 end

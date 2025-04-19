@@ -5,8 +5,9 @@ defmodule Langchaindemo do
 
   def model(), do: Application.fetch_env!(:langchain, :model)
   def endpoint(), do: Application.fetch_env!(:langchain, :endpoint)
+  def system_prompt(), do: Application.fetch_env!(:langchain, :system_prompt)
 
-  def doit do
+  def doit(llm_prompt) when is_binary(llm_prompt) do
     {:ok, updated_chain} =
       %{
         llm:
@@ -16,7 +17,10 @@ defmodule Langchaindemo do
           })
       }
       |> LLMChain.new!()
-      |> LLMChain.add_message(Message.new_user!("Testing, testing!"))
+      |> LLMChain.add_messages([
+        Message.new_system!(system_prompt()),
+        Message.new_user!(llm_prompt)
+      ])
       |> LLMChain.run()
 
     updated_chain.last_message.content
