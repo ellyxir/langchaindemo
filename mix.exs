@@ -24,7 +24,8 @@ defmodule Langchaindemo.MixProject do
     [
       {:langchain, "~> 0.3.0"},
       {:kino, "~> 0.12.0"},
-      {:nostrum, "~> 0.10"}
+      {:nostrum, "~> 0.10"},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 end
