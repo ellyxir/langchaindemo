@@ -9,6 +9,7 @@ pkgs.mkShellNoCC {
     elixir-ls
     marksman # lsp for markdown
     mise # nix needs this to work with elixir-ls and hx for some reason
+    mdcat # cat for markdown
   ] ++ [
 #    (_unstable.deno)
   ];

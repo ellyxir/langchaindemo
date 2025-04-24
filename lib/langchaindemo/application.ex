@@ -10,7 +10,8 @@ defmodule Langchaindemo.Application do
     children = [
       # Starts a worker by calling: Langchaindemo.Worker.start_link(arg)
       # {Langchaindemo.Worker, arg}
-      Langchaindemo.Bot.Consumer
+      Langchaindemo.Bot.Consumer,
+      Langchaindemo.ProcessRegistry
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
