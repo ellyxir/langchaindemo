@@ -1,5 +1,7 @@
 ## TODO
 * instead of !llm use @botname to call the llm
+  * Message has mentions(), a list of mentions. 
+  * get the bot's id: %Nostrum.Struct.User{id: bot_id} <- Nostrum.Cache.Me.get()
 * make the bot responses replies
 * response should be embed if it wants to share images and stuff... make a function for this
 * summarize user context when it gets too large
