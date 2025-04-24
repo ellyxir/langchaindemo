@@ -4,6 +4,12 @@
 
 ## Installation
 
+Set environment variables for:
+* LLM_BOT_TOKEN - discord bot token
+* OPENROUTER_API_KEY - key from openrouter.ai
+
+Make sure the Discord bot has gateway intents enabled
+
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 by adding `langchaindemo` to your list of dependencies in `mix.exs`:
 
