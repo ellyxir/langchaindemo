@@ -16,18 +16,18 @@ defmodule Langchaindemo.Bot.Consumer do
            author: %Nostrum.Struct.User{id: user_id, bot: nil}
          } = _msg, _ws_state}
       ) do
-    Logger.debug("userid #{user_id} asked question: #{llm_prompt}")
+    Logger.debug("Consumer: userid #{user_id}, prompt=#{llm_prompt}")
 
-    # find the UserServer
-    pid = Langchaindemo.UserSupervisor.server_process(user_id)
-    Logger.debug("got process id=#{inspect pid}")
+    # ensure we have a UserServer running for this user
+    _pid = Langchaindemo.UserSupervisor.server_process(user_id)
 
-    # response =
-    #   Langchaindemo.doit(llm_prompt)
-    #   |> Util.split_len(@discord_max_msg_length)
-    #   |> Enum.each(fn llm_msg when is_binary(llm_msg) ->
-    #     {:ok, _msg} = Message.create(channel_id, llm_msg)
-    #   end)
-    # Logger.debug("userid #{user_id} llm response=#{response}")
+    response =
+      Langchaindemo.UserServer.run_prompt(user_id, llm_prompt)
+      |> Util.split_len(@discord_max_msg_length)
+      |> Enum.each(fn llm_msg when is_binary(llm_msg) ->
+        {:ok, _msg} = Message.create(channel_id, llm_msg)
+      end)
+
+    Logger.debug("userid #{user_id} llm response=#{response}")
   end
 end
