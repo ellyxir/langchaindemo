@@ -3,8 +3,9 @@ defmodule Langchaindemo.Bot.Consumer do
   require Logger
   
   alias Nostrum.Api.Message
+  alias Langchaindemo.Util
 
-  @discord_max_msg_length 1000
+  @discord_max_msg_length 1700
 
   # TODO: actually should be recusive when we split because it might be more than double the max size  
   def handle_event(
@@ -17,13 +18,9 @@ defmodule Langchaindemo.Bot.Consumer do
       ) do
     Logger.debug("userid #{user_id} asked question: #{llm_prompt}")
     response = Langchaindemo.doit(llm_prompt)
-    |> String.split_at(@discord_max_msg_length)
-    |> Tuple.to_list()
-    |> Enum.each(fn 
-      ""  -> :ok
-      llm_msg when is_binary(llm_msg) -> 
+    |> Util.split_len(@discord_max_msg_length)
+    |> Enum.each(fn llm_msg when is_binary(llm_msg) -> 
         {:ok, _msg} = Message.create(channel_id, llm_msg)
-        :ok
     end)
     Logger.debug("userid #{user_id} llm response=#{response}")
   end
