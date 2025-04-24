@@ -1,7 +1,10 @@
 defmodule Langchaindemo.UserServer do
   use GenServer
 
+  require Logger
+  
   def start_link(user_id) when is_integer(user_id) do
+    Logger.debug("UserServer.start_link: user_id=#{user_id}")
     GenServer.start_link(
       __MODULE__,
       nil,

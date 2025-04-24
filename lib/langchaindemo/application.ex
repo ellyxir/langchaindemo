@@ -8,9 +8,8 @@ defmodule Langchaindemo.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: Langchaindemo.Worker.start_link(arg)
-      # {Langchaindemo.Worker, arg}
       Langchaindemo.Bot.Consumer,
+      Langchaindemo.UserSupervisor,
       Langchaindemo.ProcessRegistry
     ]
 
