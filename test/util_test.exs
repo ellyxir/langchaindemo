@@ -2,7 +2,7 @@ defmodule UtilTest do
   use ExUnit.Case
 
   alias Langchaindemo.Util
-  
+
   describe "split_len/2" do
     test "returns empty list when input string is empty" do
       assert Util.split_len("", 5) == []
@@ -34,4 +34,3 @@ defmodule UtilTest do
     end
   end
 end
-

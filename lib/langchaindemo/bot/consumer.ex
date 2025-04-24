@@ -1,7 +1,7 @@
 defmodule Langchaindemo.Bot.Consumer do
   use Nostrum.Consumer
   require Logger
-  
+
   alias Nostrum.Api.Message
   alias Langchaindemo.Util
 
@@ -17,11 +17,14 @@ defmodule Langchaindemo.Bot.Consumer do
          } = _msg, _ws_state}
       ) do
     Logger.debug("userid #{user_id} asked question: #{llm_prompt}")
-    response = Langchaindemo.doit(llm_prompt)
-    |> Util.split_len(@discord_max_msg_length)
-    |> Enum.each(fn llm_msg when is_binary(llm_msg) -> 
+
+    response =
+      Langchaindemo.doit(llm_prompt)
+      |> Util.split_len(@discord_max_msg_length)
+      |> Enum.each(fn llm_msg when is_binary(llm_msg) ->
         {:ok, _msg} = Message.create(channel_id, llm_msg)
-    end)
+      end)
+
     Logger.debug("userid #{user_id} llm response=#{response}")
   end
 end
