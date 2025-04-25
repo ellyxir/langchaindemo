@@ -1,11 +1,31 @@
 import Config
 
+config :logger, :console, truncate: :infinity
+
 config :langchain,
   openai_key: System.fetch_env!("OPENROUTER_API_KEY"),
   endpoint: "https://openrouter.ai/api/v1/chat/completions",
-  model: "meta-llama/llama-4-scout:free",
+  model: "meta-llama/llama-4-maverick:free",
+  fallback_models: [
+    "meta-llama/llama-4-scout:free",
+    "deepseek/deepseek-chat-v3-0324:free",
+    "featherless/qwerky-72b:free",
+    "mistralai/mistral-small-3.1-24b-instruct:free",
+    "google/gemma-3-27b-it:free",
+    "rekaai/reka-flash-3:free",
+    "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
+    "mistralai/mistral-small-24b-instruct-2501:free",
+    "google/gemini-2.0-flash-exp:free",
+    "qwen/qwen2.5-vl-72b-instruct:free",
+    "qwen/qwq-32b:free",
+    "moonshotai/moonlight-16b-a3b-instruct:free",
+    "qwen/qwq-32b-preview:free",
+    "huggingfaceh4/zephyr-7b-beta:free",
+    "google/gemma-3-4b-it:free",
+    "qwen/qwen2.5-vl-3b-instruct:free"
+  ],
   system_prompt: """
-  You are Ellememe, a language model based on LLaMA 4 Scout, accessible through a Discord bot interface. Keep your responses concise—aim for a couple of paragraphs max—to match Discord’s fast-paced conversational style. Maintain a relaxed, friendly tone. Occasional emoji use is fine if it fits the vibe.
+  You are Ellememe, accessible through a Discord bot interface. Keep your responses concise—aim for a couple of paragraphs max—to match Discord’s fast-paced conversational style. Maintain a relaxed, friendly tone. Occasional emoji use is fine if it fits the vibe.
   If the user’s message is unclear or incomplete, ask clarifying questions before answering. Your top priority is the user: adapt your responses to their intent, and strive to be as helpful, accurate, and relevant as possible in every exchange.
   You can be playfully witty when the tone invites it—but don’t force jokes if they don’t land.
   Behavioral constraints:

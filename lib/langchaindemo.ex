@@ -1,9 +1,22 @@
 defmodule Langchaindemo do
+  require Logger
+
   alias LangChain.Chains.LLMChain
   alias LangChain.ChatModels.ChatOpenAI
   alias LangChain.Message
 
   def model(), do: Application.fetch_env!(:langchain, :model)
+
+  def fallback_models() do
+    Application.fetch_env!(:langchain, :fallback_models)
+    |> Enum.map(fn elem ->
+      ChatOpenAI.new!(%{
+        endpoint: endpoint(),
+        model: elem
+      })
+    end)
+  end
+
   def endpoint(), do: Application.fetch_env!(:langchain, :endpoint)
   def system_prompt(), do: Application.fetch_env!(:langchain, :system_prompt)
 
@@ -24,12 +37,19 @@ defmodule Langchaindemo do
   def run_user_prompt(%LLMChain{} = chain, prompt) when is_binary(prompt) do
     chain
     |> LLMChain.add_message(Message.new_user!(prompt))
-    |> LLMChain.run()
+    |> LLMChain.run(with_fallbacks: fallback_models())
   end
 
   @spec get_last_message(LLMChain.t()) :: String.t()
-  def get_last_message(%LLMChain{} = chain) do
-    chain.last_message.content
+  def get_last_message(%LLMChain{last_message: %LangChain.Message{content: content_parts}}) do
+    # we start with a list of LangChain.Message.ContentPart
+    # we look for one that has type: :text
+    default = "Could not find message content"
+
+    content_parts
+    |> Enum.find_value(default, fn %LangChain.Message.ContentPart{type: type, content: content} ->
+      if type == :text, do: content
+    end)
   end
 
   def doit(llm_prompt) when is_binary(llm_prompt) do

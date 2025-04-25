@@ -4,6 +4,9 @@ defmodule Langchaindemo.UserServer do
 
   defstruct [:chain, :user_id]
 
+  # how long we'll wait for the LLM to respond
+  @max_llm_wait_ms 30_0000
+
   def start_link(user_id) when is_integer(user_id) do
     Logger.debug("UserServer.start_link: user_id=#{user_id}")
 
@@ -16,7 +19,7 @@ defmodule Langchaindemo.UserServer do
 
   @spec run_prompt(non_neg_integer(), String.t()) :: String.t()
   def run_prompt(user_id, prompt) do
-    GenServer.call(via_tuple(user_id), {:run_prompt, prompt})
+    GenServer.call(via_tuple(user_id), {:run_prompt, prompt}, @max_llm_wait_ms)
   end
 
   # Callbacks
@@ -33,24 +36,28 @@ defmodule Langchaindemo.UserServer do
   # end
 
   @impl true
-  def handle_call({:run_prompt, prompt}, _, %__MODULE__{user_id: user_id, chain: chain} = state) do
+  def handle_call(
+        {:run_prompt, prompt},
+        _,
+        %__MODULE__{user_id: user_id, chain: %LangChain.Chains.LLMChain{} = chain} = state
+      ) do
     Logger.debug("UserServer.handle_call: user_id=#{user_id} running prompt #{prompt}")
 
     case Langchaindemo.run_user_prompt(chain, prompt) do
       {:ok, new_chain} ->
         # update state
         new_state = %{state | chain: new_chain}
+        response_content = Langchaindemo.get_last_message(new_chain)
 
-        # pull out the actual text response
-        response_text = Langchaindemo.get_last_message(new_chain)
+        Logger.debug(
+          "UserServer.handle_call: user_id=#{user_id}, response=#{inspect(response_content)}"
+        )
 
-        Logger.debug("UserServer.handle_call: user_id=#{user_id}, response=#{response_text}")
-
-        {:reply, response_text, new_state}
+        {:reply, response_content, new_state}
 
       {:error, _, reason} ->
         Logger.error("UserServer: user_id=#{user_id}, error=#{inspect(reason)}")
-        {:reply, "There was an error", state}
+        {:reply, "There was an error: #{inspect(reason)}", state}
     end
   end
 
