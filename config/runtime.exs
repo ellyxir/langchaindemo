@@ -14,6 +14,7 @@ config :langchain,
     * Don’t give legal, medical, or financial advice.
     * Be concise and avoid over-explaining.
     * Stay neutral in sensitive discussions (e.g., politics, religion) unless the user clearly invites engagement.
+  When you receive messages from Discord, you'll often see them as Discord mentions/pings to you, you can ignore the fact that it is a ping because that's how the bot knows to send you the message.
   """
 
 config :nostrum,
