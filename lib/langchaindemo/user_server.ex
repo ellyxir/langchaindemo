@@ -6,7 +6,7 @@ defmodule Langchaindemo.UserServer do
 
   # how long we'll wait for the LLM to respond
   @max_llm_wait_ms 30_0000
-  
+
   def start_link(user_id) when is_integer(user_id) do
     Logger.debug("UserServer.start_link: user_id=#{user_id}")
 
@@ -22,7 +22,7 @@ defmodule Langchaindemo.UserServer do
     try do
       {:ok, GenServer.call(via_tuple(user_id), {:run_prompt, prompt}, @max_llm_wait_ms)}
     catch
-      :exit, {:timeout, _details} -> 
+      :exit, {:timeout, _details} ->
         {:error, :timeout}
     end
   end

@@ -24,18 +24,20 @@ defmodule Langchaindemo.Bot.Consumer do
          # ensure we have a UserServer running for this user
          pid <- Langchaindemo.UserSupervisor.server_process(user_id),
          {:ok, response} <- Langchaindemo.UserServer.run_prompt(user_id, llm_prompt) do
-        response
-        |> Util.split_len(@discord_max_msg_length)
-        |> Enum.each(fn llm_msg when is_binary(llm_msg) ->
-          {:ok, _msg} = Message.create(channel_id, llm_msg)
-        end)
+      response
+      |> Util.split_len(@discord_max_msg_length)
+      |> Enum.each(fn llm_msg when is_binary(llm_msg) ->
+        {:ok, _msg} = Message.create(channel_id, llm_msg)
+      end)
 
       Logger.debug("user_id #{user_id}, user_server=#{inspect(pid)}, llm response=#{response}")
       :ok
     else
       {:error, :timeout} ->
-          {:ok, _msg} = Message.create(channel_id, "Error: LLM took long to respond")
-      _ -> :ok
+        {:ok, _msg} = Message.create(channel_id, "Error: LLM took long to respond")
+
+      _ ->
+        :ok
     end
   end
 end
