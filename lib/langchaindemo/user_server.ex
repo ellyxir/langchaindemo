@@ -17,7 +17,12 @@ defmodule Langchaindemo.UserServer do
     )
   end
 
-  @spec run_prompt(non_neg_integer(), String.t()) :: {:ok, String.t()} | {:error, :timeout}
+  @doc """
+  this should return a map based on the json schema specified in the system prompt
+  keys should be `Langchaindemo.message_content_key()` and `Langchaindemo.message_state_key()`
+  TODO: make this a defstruct , dont like random string keys passed around
+  """
+  @spec run_prompt(non_neg_integer(), String.t()) :: {:ok, map()} | {:error, :timeout}
   def run_prompt(user_id, prompt) do
     try do
       {:ok, GenServer.call(via_tuple(user_id), {:run_prompt, prompt}, @max_llm_wait_ms)}

@@ -22,7 +22,8 @@ defmodule Langchaindemo.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      #      {:langchain, "~> 0.3.0"},
+      #{:langchain, "~> 0.3.0"},
+      #{:langchain, path: "../langchain"},
       {:langchain, github: "ellyxir/langchain", branch: "custom_langchain"},
       {:kino, "~> 0.12.0"},
       {:nostrum, "~> 0.10"},
