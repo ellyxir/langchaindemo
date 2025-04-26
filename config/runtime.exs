@@ -22,7 +22,7 @@ config :langchain,
     "qwen/qwq-32b-preview:free",
     "huggingfaceh4/zephyr-7b-beta:free",
     "google/gemma-3-4b-it:free",
-    "qwen/qwen2.5-vl-3b-instruct:free",
+    "qwen/qwen2.5-vl-3b-instruct:free"
     # "x-ai/grok-3-mini-beta",
     # "openai/gpt-4o-mini", 
     # "openai/gpt-4.1-nano",

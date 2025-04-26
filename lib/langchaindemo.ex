@@ -35,6 +35,7 @@ defmodule Langchaindemo do
 
   def endpoint(), do: Application.fetch_env!(:langchain, :endpoint)
   def system_prompt(), do: Application.fetch_env!(:langchain, :system_prompt)
+
   def chatopenai(model) do
     ChatOpenAI.new!(%{
       endpoint: endpoint(),
@@ -42,7 +43,7 @@ defmodule Langchaindemo do
       json_response: true
     })
   end
-  
+
   def new_chain() do
     %{
       llm: chatopenai(model())
@@ -50,7 +51,8 @@ defmodule Langchaindemo do
     |> LLMChain.new!()
     |> LLMChain.add_message(Message.new_system!(system_prompt()))
     |> LLMChain.message_processors([JsonProcessor.new!(~r/(\{.*\})/s)])
-    #~r/```json(.*?)```/s)])
+
+    # ~r/```json(.*?)```/s)])
   end
 
   @spec run_user_prompt(LLMChain.t(), String.t()) ::
@@ -63,7 +65,12 @@ defmodule Langchaindemo do
 
   # TODO: dont return a map, return a real struct
   @spec get_last_message(LLMChain.t()) :: map()
-  def get_last_message(%LLMChain{last_message: %LangChain.Message{content: _content_parts, processed_content: processed_content}}) do
+  def get_last_message(%LLMChain{
+        last_message: %LangChain.Message{
+          content: _content_parts,
+          processed_content: processed_content
+        }
+      }) do
     # we start with a list of LangChain.Message.ContentPart
     # we look for one that has type: :text
 
