@@ -22,7 +22,7 @@ defmodule Langchaindemo.UserServer do
   keys should be `Langchaindemo.message_content_key()` and `Langchaindemo.message_state_key()`
   TODO: make this a defstruct , dont like random string keys passed around
   """
-  @spec run_prompt(non_neg_integer(), String.t()) :: {:ok, map()} | {:error, :timeout}
+  @spec run_prompt(non_neg_integer(), String.t()) :: {:ok, map() | nil} | {:error, :timeout}
   def run_prompt(user_id, prompt) do
     try do
       {:ok, GenServer.call(via_tuple(user_id), {:run_prompt, prompt}, @max_llm_wait_ms)}
@@ -60,7 +60,7 @@ defmodule Langchaindemo.UserServer do
         response_content = Langchaindemo.get_last_message(new_chain)
 
         Logger.debug(
-          "UserServer.handle_call: user_id=#{user_id}, response=#{inspect(response_content)}"
+          "UserServer.handle_call: user_id=#{user_id}, response=#{inspect(response_content)}, full last message=#{inspect new_chain.last_message} "
         )
 
         {:reply, response_content, new_state}

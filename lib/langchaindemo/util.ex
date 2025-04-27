@@ -1,4 +1,6 @@
 defmodule Langchaindemo.Util do
+  require Logger
+  
   @doc """
   splits a string into a list of strings, each one of len length, last one length <= len
   """
@@ -17,5 +19,8 @@ defmodule Langchaindemo.Util do
         {head, tail} = String.split_at(s, len)
         [head | split_len(tail, len)]
     end
+  end
+  def split_len(s, len) do
+    Logger.error("received invalid input: s=#{inspect s}, len=#{inspect len}")
   end
 end

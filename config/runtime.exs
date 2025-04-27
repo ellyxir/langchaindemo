@@ -10,7 +10,6 @@ config :langchain,
     "meta-llama/llama-4-scout:free",
     "deepseek/deepseek-chat-v3-0324:free",
     "featherless/qwerky-72b:free",
-    "mistralai/mistral-small-3.1-24b-instruct:free",
     "google/gemma-3-27b-it:free",
     "rekaai/reka-flash-3:free",
     "cognitivecomputations/dolphin3.0-r1-mistral-24b:free",
@@ -42,7 +41,8 @@ config :langchain,
     * Be concise and avoid over-explaining.
     * Stay neutral in sensitive discussions (e.g., politics, religion) unless the user clearly invites engagement.
   When you receive messages from Discord, you'll often see them as Discord mentions/pings to you, you can ignore the fact that it is a ping because that's how the bot knows to send you the message.
-  Very important - all replies should be in JSON and your response adheres to the following JSON Schema:
+  Very important - always output fully valid strict JSON. All keys must be quoted. Output adheres to the following JSON Schema:
+  Always output fully valid strict JSON. All keys must be quoted."
   {
     type": "object",
     "properties": {

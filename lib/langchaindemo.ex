@@ -60,7 +60,7 @@ defmodule Langchaindemo do
   def run_user_prompt(%LLMChain{} = chain, prompt) when is_binary(prompt) do
     chain
     |> LLMChain.add_message(Message.new_user!(prompt))
-    |> LLMChain.run(with_fallbacks: fallback_models())
+    |> LLMChain.run(with_fallbacks: fallback_models(), mode: :until_success)
   end
 
   # TODO: dont return a map, return a real struct
