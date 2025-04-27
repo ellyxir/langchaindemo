@@ -7,7 +7,6 @@ defmodule Langchaindemo.Bot.Consumer do
 
   @discord_max_msg_length 1700
 
-  # TODO: actually should be recusive when we split because it might be more than double the max size  
   def handle_event(
         {:MESSAGE_CREATE,
          %Nostrum.Struct.Message{
