@@ -29,8 +29,8 @@ defmodule UtilTest do
     end
 
     test "raises if len is zero or negative" do
-      assert_raise FunctionClauseError, fn -> Util.split_len("abc", 0) end
-      assert_raise FunctionClauseError, fn -> Util.split_len("abc", -1) end
+      assert_raise ArgumentError, fn -> Util.split_len("abc", 0) end
+      assert_raise ArgumentError, fn -> Util.split_len("abc", -1) end
     end
   end
 end
