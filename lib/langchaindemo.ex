@@ -63,8 +63,8 @@ defmodule Langchaindemo do
     |> LLMChain.run(with_fallbacks: fallback_models(), mode: :until_success)
   end
 
-  # TODO: dont return a map, return a real struct
-  @spec get_last_message(LLMChain.t()) :: map()
+
+  @spec get_last_message(LLMChain.t()) :: {:ok, Langchaindemo.LLMResponse.t()} | {:error, any()}
   def get_last_message(%LLMChain{
         last_message: %LangChain.Message{
           content: _content_parts,
@@ -81,6 +81,6 @@ defmodule Langchaindemo do
     # |> Enum.find_value(default, fn %LangChain.Message.ContentPart{type: type, content: content} ->
     #   if type == :text, do: content
     # end)
-    processed_content
+    Langchaindemo.LLMResponse.from(processed_content)
   end
 end

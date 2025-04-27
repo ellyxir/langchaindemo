@@ -22,8 +22,7 @@ defmodule Langchaindemo.Bot.Consumer do
          true <- Enum.any?(mentions, fn %Nostrum.Struct.User{id: cur_id} -> cur_id == bot_id end),
          # ensure we have a UserServer running for this user
          pid <- Langchaindemo.UserSupervisor.server_process(user_id),
-         {:ok, %{} = response} <- Langchaindemo.UserServer.run_prompt(user_id, llm_prompt),
-         response_content <- response[Langchaindemo.message_content_key()] do
+         {:ok, %Langchaindemo.LLMResponse{content: response_content} = response} <- Langchaindemo.UserServer.run_prompt(user_id, llm_prompt) do
       response_content
       |> Util.split_len(@discord_max_msg_length)
       |> Enum.each(fn llm_msg when is_binary(llm_msg) ->
@@ -39,11 +38,11 @@ defmodule Langchaindemo.Bot.Consumer do
       {:error, :timeout} ->
         _ = Message.create(channel_id, "Error: LLM took long to respond")
 
-      {:ok, nil} ->
-        # probably a json error
-        Logger.error("consumer.handle_event: nil parsed_content")
-        _ = Message.create(channel_id, "Error: no data, probably JSON parsing failure")
-        {:error, "nil as message.parsed_content"}
+      # {:ok, nil} ->
+      #   # probably a json error
+      #   Logger.error("consumer.handle_event: nil parsed_content")
+      #   _ = Message.create(channel_id, "Error: no data, probably JSON parsing failure")
+      #   {:error, "nil as message.parsed_content"}
         
       error ->
         Logger.error("consumer.handle_event: message_create: user_id=#{user_id}, error=#{inspect error}")

@@ -20,9 +20,8 @@ defmodule Langchaindemo.UserServer do
   @doc """
   this should return a map based on the json schema specified in the system prompt
   keys should be `Langchaindemo.message_content_key()` and `Langchaindemo.message_state_key()`
-  TODO: make this a defstruct , dont like random string keys passed around
   """
-  @spec run_prompt(non_neg_integer(), String.t()) :: {:ok, map() | nil} | {:error, :timeout}
+  @spec run_prompt(non_neg_integer(), String.t()) :: {:ok, Langchaindemo.LLMResponse.t()} | {:error, :timeout}
   def run_prompt(user_id, prompt) do
     try do
       {:ok, GenServer.call(via_tuple(user_id), {:run_prompt, prompt}, @max_llm_wait_ms)}
@@ -57,7 +56,7 @@ defmodule Langchaindemo.UserServer do
       {:ok, new_chain} ->
         # update state
         new_state = %{state | chain: new_chain}
-        response_content = Langchaindemo.get_last_message(new_chain)
+        {:ok, response_content} = Langchaindemo.get_last_message(new_chain)
 
         Logger.debug(
           "UserServer.handle_call: user_id=#{user_id}, response=#{inspect(response_content)}, full last message=#{inspect new_chain.last_message} "
