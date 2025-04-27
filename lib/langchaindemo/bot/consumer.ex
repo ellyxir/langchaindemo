@@ -16,7 +16,7 @@ defmodule Langchaindemo.Bot.Consumer do
            author: %Nostrum.Struct.User{id: user_id, bot: nil},
            mentions: mentions
          } = _msg, _ws_state}
-      ) do
+      ) when not is_nil(mentions) and length(mentions) > 0 do
     Logger.debug("Consumer: user_id #{user_id}, prompt=#{llm_prompt}")
 
     with %Nostrum.Struct.User{id: bot_id} <- Nostrum.Cache.Me.get(),
